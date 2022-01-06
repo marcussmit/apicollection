@@ -32,27 +32,33 @@ class netbox_class
                 return curl_exec($hCurl);
         }
  
+        public function GetModules()
+        {
+                $Modules[] = "circuits/circuit-terminations";
+                $Modules[] = "circuits/circuit-types";
+                $Modules[] = "circuits/provider-networks";
+                $Modules[] = "dcim/console-server-ports";
+                $Modules[] = "dcim/devices";
+                $Modules[] = "dcim/regions";
+                $Modules[] = "dcim/site-groups";
+                $Modules[] = "dcim/sites";
+                $Modules[] = "dcim/virtual-chassis";
+                $Modules[] = "extras/config-contexts";
+                $Modules[] = "extras/custom-links";
+                $Modules[] = "ipam/asns";
+                $Modules[] = "ipam/fhrp-group-assignments";
+                $Modules[] = "ipam/ip-addresses";
+                return $Modules;
+        }
+
         // Create backup:
         public function CreateBackup($BaseDir)
         {
-                $objecttypes[] = "circuits/circuit-terminations";
-                $objecttypes[] = "circuits/circuit-types";
-                $objecttypes[] = "circuits/provider-networks";
-                $objecttypes[] = "dcim/console-server-ports";
-                $objecttypes[] = "dcim/devices";
-                $objecttypes[] = "dcim/regions";
-                $objecttypes[] = "dcim/site-groups";
-                $objecttypes[] = "dcim/sites";
-                $objecttypes[] = "dcim/virtual-chassis";
-                $objecttypes[] = "extras/config-contexts";
-                $objecttypes[] = "extras/custom-links";
-                $objecttypes[] = "ipam/asns";
-                $objecttypes[] = "ipam/fhrp-group-assignments";
-                $objecttypes[] = "ipam/ip-addresses";
- 
+                // Feth the list of object types that are available to fetch:
+                $objecttypes = $this->GetModules();
+
                 foreach($objecttypes as $objecttype)
-                {
- 
+                { 
                         $fullpath = $BaseDir . "/" . $objecttype;
                         print "Maak $fullpath.\r\n";
                         if (!file_exists($fullpath)) mkdir ($fullpath, 777, true);

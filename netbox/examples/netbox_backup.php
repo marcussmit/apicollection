@@ -9,7 +9,7 @@
    $backupdir = "/var/backup/netbox";
 
    // Get the modules that are reachable:
-   $Modules = $Netbox->getModules();
+   $Modules = $Netbox->GetModules();
 
     // Loop through the modules:
     foreach($Modules as $module)
@@ -26,7 +26,7 @@
                 print ".";
                 file_put_contents($backupdir."/ipam/ip-addresses/".$item->id.".raw". print_r($Item, true));
             }
-
-        }
+            $offset += $limit;
+        } while($List->next != "");
     }
 ?>
