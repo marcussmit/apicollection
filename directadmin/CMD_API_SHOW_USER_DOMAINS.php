@@ -1,0 +1,3 @@
+<?php
+
+/CMD_API_SHOW_USER_DOMAINS
