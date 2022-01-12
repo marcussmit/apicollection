@@ -2,8 +2,8 @@
 
 require_once("API.php");
 
-$username = "marcussmit";
-$password = "uaa=6qB6rO1~&gFx";
+$username = "$openprovider_username";
+$password = "$openprovider_password";
 
 // Create a new API connection
 $api = new OP_API ('https://api.openprovider.eu');

@@ -34,20 +34,20 @@ class netbox_class
  
         public function GetModules()
         {
-                $Modules[] = "circuits/circuit-terminations";
-                $Modules[] = "circuits/circuit-types";
-                $Modules[] = "circuits/provider-networks";
-                $Modules[] = "dcim/console-server-ports";
-                $Modules[] = "dcim/devices";
-                $Modules[] = "dcim/regions";
-                $Modules[] = "dcim/site-groups";
-                $Modules[] = "dcim/sites";
-                $Modules[] = "dcim/virtual-chassis";
-                $Modules[] = "extras/config-contexts";
-                $Modules[] = "extras/custom-links";
-                $Modules[] = "ipam/asns";
-                $Modules[] = "ipam/fhrp-group-assignments";
-                $Modules[] = "ipam/ip-addresses";
+                $Modules[] = array("path"=>"circuits/circuit-terminations");
+                $Modules[] = array("path"=>"circuits/circuit-types");
+                $Modules[] = array("path"=>"circuits/provider-networks");
+                $Modules[] = array("path"=>"dcim/console-server-ports");
+                $Modules[] = array("path"=>"dcim/devices");
+                $Modules[] = array("path"=>"dcim/regions");
+                $Modules[] = array("path"=>"dcim/site-groups");
+                $Modules[] = array("path"=>"dcim/sites");
+                $Modules[] = array("path"=>"dcim/virtual-chassis");
+                $Modules[] = array("path"=>"extras/config-contexts");
+                $Modules[] = array("path"=>"extras/custom-links");
+                $Modules[] = array("path"=>"ipam/asns");
+                $Modules[] = array("path"=>"ipam/fhrp-group-assignments");
+                $Modules[] = array("path"=>"ipam/ip-addresses");
                 return $Modules;
         }
 
@@ -55,11 +55,11 @@ class netbox_class
         public function CreateBackup($BaseDir)
         {
                 // Feth the list of object types that are available to fetch:
-                $objecttypes = $this->GetModules();
+                $Modues = $this->GetModules();
 
-                foreach($objecttypes as $objecttype)
+                foreach($Modules as $objecttype)
                 { 
-                        $fullpath = $BaseDir . "/" . $objecttype;
+                        $fullpath = $BaseDir . "/" . $objecttype['path'];
                         print "Maak $fullpath.\r\n";
                         if (!file_exists($fullpath)) mkdir ($fullpath, 777, true);
                         // Fetch one object, to retrieve the counter:
