@@ -3,7 +3,7 @@
    require_once("../netbox_class.php");
    require_once("../netbox_config.php");
 
-   $Netbox = new netbox_class($netbox_url, $netbox_token);
+   $Netbox = new netbox\netbox\netbox($netbox_url, $netbox_token);
 
    // Define the basedir where the backups should be dumped:
    $backupdir = "/var/backup/netbox";

@@ -1,6 +1,8 @@
 <?php
-         
-class netbox_class
+        
+namespace netbox\netbox;
+
+class netbox
 {
  
         var $token = "";
@@ -57,13 +59,13 @@ class netbox_class
                 // Feth the list of object types that are available to fetch:
                 $Modues = $this->GetModules();
 
-                foreach($Modules as $objecttype)
+                foreach($Modules as $module)
                 { 
-                        $fullpath = $BaseDir . "/" . $objecttype['path'];
-                        print "Maak $fullpath.\r\n";
+                        $fullpath = $BaseDir . "/" . $module['path'];
+                        print "Creating $fullpath.\r\n";
                         if (!file_exists($fullpath)) mkdir ($fullpath, 777, true);
                         // Fetch one object, to retrieve the counter:
-                        $Item = $this->request("/".$objecttype."/", "GET", array("offset"=>0, "limit"=>1));
+                        $Item = $this->request("/".$module['path']."/", "GET", array("offset"=>0, "limit"=>1));
                         $Decoded = json_decode($Item, true);
                         $count = $Decoded['count'];
                         print "Object type $objecttype heeft $count items.\r\n";
@@ -73,7 +75,7 @@ class netbox_class
                         for($i = 0; $i < $count; $i += $items_per_query)
                         {
                                 print "Ophalen items $i tot maximaal ".($i + $items_per_query -1)."\r\n";
-                                $Item = $this->request("/".$objecttype."/", "GET", array("offset"=>$i, "limit"=>1));
+                                $Item = $this->request("/".$objecttype['path']."/", "GET", array("offset"=>$i, "limit"=>1));
                                 $arrItem = json_decode($Item);
                                 $Result = $arrItem->results[0];
                                 for ($n = 0; $n < $items_per_query; $n++)
