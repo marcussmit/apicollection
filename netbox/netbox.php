@@ -25,7 +25,7 @@ class netbox
         private function Request($path, $mode = "GET", $parameters = null)
         {
                 $url = ($this->usessl === true) ? "https://" : "http://";
-                $url .= $this->hostname."/api/".$path."/";
+                $url .= $this->hostname."/api".$path."/";
                 $parms = "";
  
                 if ($mode == "GET")
@@ -61,33 +61,49 @@ class netbox
  
         public function GetModules()
         {
-                $Modules[] = array("path"=>"circuits/circuit-terminations", "Identifier"=>"id");
-                $Modules[] = array("path"=>"circuits/circuit-types", "Identifier"=>"id");
-                $Modules[] = array("path"=>"circuits/provider-networks", "Identifier"=>"id");
-                $Modules[] = array("path"=>"dcim/console-server-ports", "Identifier"=>"id");
-                $Modules[] = array("path"=>"dcim/devices", "Identifier"=>"id");
-                $Modules[] = array("path"=>"dcim/device-types", "Identifier"=>"id");
-                $Modules[] = array("path"=>"dcim/front-ports", "Identifier"=>"id");
-                $Modules[] = array("path"=>"dcim/interface-templates", "Identifier"=>"id");
-                $Modules[] = array("path"=>"dcim/interfaces", "Identifier"=>"id");
-                $Modules[] = array("path"=>"dcim/inventory-items", "Identifier"=>"id");
-                $Modules[] = array("path"=>"dcim/locations", "Identifier"=>"id");
-                $Modules[] = array("path"=>"dcim/manufacturers", "Identifier"=>"id");
-                $Modules[] = array("path"=>"dcim/platforms", "Identifier"=>"id");
-                $Modules[] = array("path"=>"dcim/power-feeds", "Identifier"=>"id");
-                $Modules[] = array("path"=>"dcim/power-outlet-templates", "Identifier"=>"id");
-                $Modules[] = array("path"=>"dcim/power-outlets", "Identifier"=>"id");
-                $Modules[] = array("path"=>"dcim/power-panels", "Identifier"=>"id");
-                $Modules[] = array("path"=>"dcim/rack-roles", "Identifier"=>"id");
-                $Modules[] = array("path"=>"dcim/regions", "Identifier"=>"id");
-                $Modules[] = array("path"=>"dcim/site-groups", "Identifier"=>"id");
-                $Modules[] = array("path"=>"dcim/sites", "Identifier"=>"id");
-                $Modules[] = array("path"=>"dcim/virtual-chassis", "Identifier"=>"id");
-                $Modules[] = array("path"=>"extras/config-contexts", "Identifier"=>"id");
-                $Modules[] = array("path"=>"extras/custom-links", "Identifier"=>"id");
-                $Modules[] = array("path"=>"ipam/asns", "Identifier"=>"id");
-                $Modules[] = array("path"=>"ipam/fhrp-group-assignments", "Identifier"=>"id");
-                $Modules[] = array("path"=>"ipam/ip-addresses", "Identifier"=>"id");
+                // This is a list of modules found on https://demo.netbox.dev/api/docs/
+                // #TODO: Complete this list.
+                $Modules[] = array("path"=>"/circuits/circuit-terminations", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/circuits/circuit-types", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/circuits/provider-networks", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/console-server-ports", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/devices-bay-templates", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/device-bays", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/devices", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/device-types", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/device-roles", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/front-ports", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/interface-templates", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/interfaces", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/inventory-items", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/locations", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/manufacturers", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/platforms", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/power-feeds", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/power-outlet-templates", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/power-outlets", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/power-panels", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/rack-roles", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/regions", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/site-groups", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/sites", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/dcim/virtual-chassis", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/extras/config-contexts", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/extras/custom-links", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/ipam/aggregates", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/ipam/asns", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/ipam/fhrp-group-assignments", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/ipam/fhrp-groups", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/ipam/ip-addresses", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/ipam/ip-ranges", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/ipam/prefixes", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/ipam/rirs", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/ipam/roles", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/ipam/route-targets", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/ipam/services", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/ipam/vlan-groups", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/ipam/vlans", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/ipam/vrfs", "Identifier"=>"id");
                 return $Modules;
         }
 
@@ -101,7 +117,7 @@ class netbox
                 { 
                         $this->debug(5, "Processing module ".$Module['path']);
 
-                        $fullpath = $BaseDir . "/" . $Module['path'];
+                        $fullpath = $BaseDir . $Module['path'];
                         if (!file_exists($fullpath))
                         {
                                 $this->debug(5, "Create $fullpath");
@@ -149,6 +165,34 @@ class netbox
                 return $list['results'];
         }
  
+        // Fetch a specific device:
+        public function GetDeviceList($Filters, $format = "json")
+        {
+
+                // Check the requested output format:
+                if (!in_array($format, array("json","xml","array"))) return null;
+
+                foreach($Filters as $Parm=>$val)
+                {
+                        if ()
+                }
+                $Result = $this->Result("/dcim/devices", )
+                $Result = $Result->results;
+
+                switch($format)
+                {
+                        case "json": { return $Result; break; }
+                        case "xml":  { return json_decode($Result, false); break; }
+                        case "array": { return json_decode($Result, true); break; }
+                }
+
+        }
+
+        // Get the current status. Also to be used as a check if we can connect.
+        public function GetStatus()
+        {
+                return $this->Request("/Status");
+        }
 }
  
 ?>
