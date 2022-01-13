@@ -15,7 +15,7 @@
     foreach($Modules as $module)
     {
         // Create the directory:
-        mkdir($backupdir.$module, 777, true);
+        mkdir($backupdir."/".$module, 755, true);
         $offset = 0; $limit =50;
         do{
             print "Fetching IP-addresses from Netbox";
