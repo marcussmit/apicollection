@@ -25,12 +25,12 @@ class netbox
         private function Request($path, $mode = "GET", $parameters = null)
         {
                 $url = ($this->usessl === true) ? "https://" : "http://";
-                $url .= $this->hostname."/api/".$path;
+                $url .= $this->hostname."/api/".$path."/";
                 $parms = "";
  
                 if ($mode == "GET")
                 {
-                        $parms = "?";
+                        $parms = array();
                         foreach($parameters as $parm=>$val)
                         {
                                 $parms[] = $parm."=".urlencode($val);
@@ -38,34 +38,43 @@ class netbox
                         $url .= join("&", $parms);
                 }
  
+                $this->debug(5, "Fetching url: $url"), 3;
+
                 $hCurl = curl_init($url);
                 curl_setopt($hCurl, CURLOPT_HTTPHEADER, array("Authorization: Token ".$this->token));
                 curl_setopt($hCurl, CURLOPT_RETURNTRANSFER, "1");
                 curl_setopt($hCurl, CURLOPT_SSL_VERIFYPEER, "0");
+
+                $Result = curl_exec($hCurl);
+
+                // Store querylog:
+                $date = date("YumHisu");
+                if (!file_exists("/var/log/apicollection/netbox/$path/")) mkdir ("/var/log/apicollection/netbox/".$path."/", 755, true);
+                file_put_contents("/var/log/apicollection/netbox/$path/$date.log");
                 return curl_exec($hCurl);
         }
 
-        private function debug($level, $message)
+        private function debug($level, $message, $indent = 0)
         {
-                if ($level >= $this->DebugLevel) print $message.$this->eol;
+                if ($level >= $this->DebugLevel) print str_repeat(".", $indent); print $message.$this->eol;
         }
  
         public function GetModules()
         {
-                $Modules[] = array("path"=>"circuits/circuit-terminations");
-                $Modules[] = array("path"=>"circuits/circuit-types");
-                $Modules[] = array("path"=>"circuits/provider-networks");
-                $Modules[] = array("path"=>"dcim/console-server-ports");
-                $Modules[] = array("path"=>"dcim/devices");
-                $Modules[] = array("path"=>"dcim/regions");
-                $Modules[] = array("path"=>"dcim/site-groups");
-                $Modules[] = array("path"=>"dcim/sites");
-                $Modules[] = array("path"=>"dcim/virtual-chassis");
-                $Modules[] = array("path"=>"extras/config-contexts");
-                $Modules[] = array("path"=>"extras/custom-links");
-                $Modules[] = array("path"=>"ipam/asns");
-                $Modules[] = array("path"=>"ipam/fhrp-group-assignments");
-                $Modules[] = array("path"=>"ipam/ip-addresses");
+                $Modules[] = array("path"=>"circuits/circuit-terminations", "Identifier"=>"id");
+                $Modules[] = array("path"=>"circuits/circuit-types", "Identifier"=>"id");
+                $Modules[] = array("path"=>"circuits/provider-networks", "Identifier"=>"id");
+                $Modules[] = array("path"=>"dcim/console-server-ports", "Identifier"=>"id");
+                $Modules[] = array("path"=>"dcim/devices", "Identifier"=>"id");
+                $Modules[] = array("path"=>"dcim/regions", "Identifier"=>"id");
+                $Modules[] = array("path"=>"dcim/site-groups", "Identifier"=>"id");
+                $Modules[] = array("path"=>"dcim/sites", "Identifier"=>"id");
+                $Modules[] = array("path"=>"dcim/virtual-chassis", "Identifier"=>"id");
+                $Modules[] = array("path"=>"extras/config-contexts", "Identifier"=>"id");
+                $Modules[] = array("path"=>"extras/custom-links", "Identifier"=>"id");
+                $Modules[] = array("path"=>"ipam/asns", "Identifier"=>"id");
+                $Modules[] = array("path"=>"ipam/fhrp-group-assignments", "Identifier"=>"id");
+                $Modules[] = array("path"=>"ipam/ip-addresses", "Identifier"=>"id");
                 return $Modules;
         }
 
@@ -77,6 +86,8 @@ class netbox
 
                 foreach($Modules as $Module)
                 { 
+                        $this->debug(5, "Processing module ".$Module['path']);
+
                         $fullpath = $BaseDir . "/" . $Module['path'];
                         if (!file_exists($fullpath))
                         {
@@ -94,12 +105,12 @@ class netbox
                         for($i = 0; $i < $count; $i += $items_per_query)
                         {
                                 $this->debug(5, "Fetch items $i up to ".($i + $items_per_query -1));
-                                $Item = $this->Request("/".$Module['path']."/", "GET", array("offset"=>$i, "limit"=>$items_per_query));
+                                $Item = $this->Request($Module['path'], "GET", array("offset"=>$i, "limit"=>$items_per_query));
                                 $arrItem = json_decode($Item);
                                 $Result = $arrItem->results[0];
                                 for ($n = 0; $n < $items_per_query; $n++)
                                 {
-                                        file_put_contents($fullpath."/".$Result->id.".raw", print_r($Result, true));
+                                        file_put_contents($fullpath."/".$Result[$n]->id.".raw", print_r($Result[$n], true));
                                 }
                         }
  
