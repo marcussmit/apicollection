@@ -1,6 +1,9 @@
 <?php
  
-   class OP_API_Exception extends Exception
+   // This file was downloaded from OpenProviders documentation site. And has been adjusted to fit our needs:
+   // 1. Class names "OP_" were renamed to openprovider_
+
+   class openprovider_API_Exception extends Exception
    {
    }
    class OP_API
@@ -27,7 +30,7 @@
            $msg = $r->getRaw();
            $str = $this->_send($msg);
            if (!$str) {
-               throw new OP_API_Exception("Bad reply", 4004);
+               throw new openprovider_API_Exception("Bad reply", 4004);
            }
            if ($this->debug) {
                echo $str . "\n";
@@ -42,7 +45,7 @@
            $msg = $r->getRaw();
            $str = $this->_send($msg);
            if (!$str) {
-               throw new OP_API_Exception("Bad reply", 4004);
+               throw new openprovider_API_Exception("Bad reply", 4004);
            }
            if ($this->debug) {
                echo $str . "\n";
@@ -176,7 +179,7 @@
            foreach ($node->childNodes as $child) {
                $name = self::decode($child->nodeName);
                if ('item' !== $name) {
-                   throw new OP_API_Exception('Wrong message format', 4006);
+                   throw new openprovider_API_Exception('Wrong message format', 4006);
                }
                $ret[] = self::convertXmlToPhpObj($child);
            }
@@ -458,7 +461,7 @@
            if ((!is_array($arr) && trim($arr) == '') ||
                $arr['reply']['code'] == 4005)
            {
-               throw new OP_API_Exception("API is temporarily unavailable due to maintenance", 4005);
+               throw new openprovider_API_Exception("API is temporarily unavailable due to maintenance", 4005);
            }
  
            $this->faultCode = (int) $arr['reply']['code'];
