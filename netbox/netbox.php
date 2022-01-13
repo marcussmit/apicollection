@@ -5,19 +5,22 @@ namespace netbox\netbox;
 class netbox
 {
  
-        var $token = "";
-        var $url = "";
- 
-        public function __construct($url, $token)
+        var $hostname = "";
+        var $token    = "";
+        var $usessl   = true;
+
+        public function __construct($hostname, $token, $usessl = true)
         {
+                // #TODO: Check validity of input values;
                 $this->token = $token;
                 $this->url = $url;
+                $this->usessl = $usessl;
         }
  
         private function request($path, $mode = "GET", $parameters = null)
         {
- 
-                $url = $this->url.$path;
+                $url = ($this->usessl === true) ? "https://" : "http://";
+                $url .= $this->hostname."/".$path;
                 $parms = "";
  
                 if ($mode == "GET")
@@ -57,7 +60,7 @@ class netbox
         public function CreateBackup($BaseDir)
         {
                 // Feth the list of object types that are available to fetch:
-                $Modues = $this->GetModules();
+                $Modules = $this->GetModules();
 
                 foreach($Modules as $module)
                 { 
