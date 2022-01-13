@@ -9,25 +9,33 @@ class netbox
         var $token    = "";
         var $usessl   = true;
 
+        private $DebugLevel = 5; // 0 = no logging, 5 = maximum. 
+
+        private $eol = "\r\n";
+
         public function __construct($hostname, $token, $usessl = true)
         {
-                // #TODO: Check validity of input values;
+                // Check values for validity
+                if (!is_bool($usessl)) return false;
                 $this->token = $token;
-                $this->url = $url;
+                $this->hostname = $hostname;
                 $this->usessl = $usessl;
         }
  
-        private function request($path, $mode = "GET", $parameters = null)
+        private function Request($path, $mode = "GET", $parameters = null)
         {
                 $url = ($this->usessl === true) ? "https://" : "http://";
-                $url .= $this->hostname."/".$path;
+                $url .= $this->hostname."/api/".$path;
                 $parms = "";
  
                 if ($mode == "GET")
                 {
                         $parms = "?";
-                        foreach($parameters as $parm=>$val) { $parms .= $parm."=".urlencode($val)."&"; }
-                        $url .= $parms;
+                        foreach($parameters as $parm=>$val)
+                        {
+                                $parms[] = $parm."=".urlencode($val);
+                        }
+                        $url .= join("&", $parms);
                 }
  
                 $hCurl = curl_init($url);
@@ -35,6 +43,11 @@ class netbox
                 curl_setopt($hCurl, CURLOPT_RETURNTRANSFER, "1");
                 curl_setopt($hCurl, CURLOPT_SSL_VERIFYPEER, "0");
                 return curl_exec($hCurl);
+        }
+
+        private function debug($level, $message)
+        {
+                if ($level >= $this->DebugLevel) print $message.$this->eol;
         }
  
         public function GetModules()
@@ -62,23 +75,26 @@ class netbox
                 // Feth the list of object types that are available to fetch:
                 $Modules = $this->GetModules();
 
-                foreach($Modules as $module)
+                foreach($Modules as $Module)
                 { 
-                        $fullpath = $BaseDir . "/" . $module['path'];
-                        print "Creating $fullpath.\r\n";
-                        if (!file_exists($fullpath)) mkdir ($fullpath, 777, true);
+                        $fullpath = $BaseDir . "/" . $Module['path'];
+                        if (!file_exists($fullpath))
+                        {
+                                $this->debug(5, "Create $fullpath");
+                                mkdir ($fullpath, 777, true);
+                        } 
                         // Fetch one object, to retrieve the counter:
-                        $Item = $this->request("/".$module['path']."/", "GET", array("offset"=>0, "limit"=>1));
+                        $Item = $this->Request($Module['path'], "GET", array("offset"=>0, "limit"=>1));
                         $Decoded = json_decode($Item, true);
                         $count = $Decoded['count'];
-                        print "Object type $objecttype heeft $count items.\r\n";
+                        $this->debug(5, "Found $count items for ".$Module['path']);
  
                         // Fetch all items:
-                        $items_per_query = 1;
+                        $items_per_query = 100;
                         for($i = 0; $i < $count; $i += $items_per_query)
                         {
-                                print "Ophalen items $i tot maximaal ".($i + $items_per_query -1)."\r\n";
-                                $Item = $this->request("/".$objecttype['path']."/", "GET", array("offset"=>$i, "limit"=>1));
+                                $this->debug(5, "Fetch items $i up to ".($i + $items_per_query -1));
+                                $Item = $this->Request("/".$Module['path']."/", "GET", array("offset"=>$i, "limit"=>$items_per_query));
                                 $arrItem = json_decode($Item);
                                 $Result = $arrItem->results[0];
                                 for ($n = 0; $n < $items_per_query; $n++)
@@ -93,7 +109,7 @@ class netbox
         // Section IPAM / AGGREGATES
         public function ipam_aggregates_list()
         {
-                $list = $this->request("/ipam/aggregates/", "GET");
+                $list = $this->Request("/ipam/aggregates/", "GET");
                 $list = json_decode($list);
                 return $list['results'];
         }
@@ -103,7 +119,7 @@ class netbox
         {
                 $Parameters['offset'] = $offset;
                 $Parameters['limit']  = $limit;
-                $list = $this->request("/ipam/ip-addresses/", "GET", $Parameters);
+                $list = $this->Request("/ipam/ip-addresses/", "GET", $Parameters);
                 $list = json_decode($list);
                 return $list['results'];
         }
