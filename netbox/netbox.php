@@ -17,9 +17,9 @@ class netbox
         {
                 // Check values for validity
                 if (!is_bool($usessl)) return false;
-                $this->token = $token;
+                $this->token    = $token;
                 $this->hostname = $hostname;
-                $this->usessl = $usessl;
+                $this->usessl   = $usessl;
         }
  
         private function Request($path, $mode = "GET", $parameters = null)
@@ -35,10 +35,10 @@ class netbox
                         {
                                 $parms[] = $parm."=".urlencode($val);
                         }
-                        $url .= join("&", $parms);
+                        $url .= "?".join("&", $parms);
                 }
  
-                $this->debug(5, "Fetching url: $url"), 3;
+                $this->debug(5, "Fetching url: $url", 3);
 
                 $hCurl = curl_init($url);
                 curl_setopt($hCurl, CURLOPT_HTTPHEADER, array("Authorization: Token ".$this->token));
@@ -48,9 +48,9 @@ class netbox
                 $Result = curl_exec($hCurl);
 
                 // Store querylog:
-                $date = date("YumHisu");
+                $date = date("YmdHisu");
                 if (!file_exists("/var/log/apicollection/netbox/$path/")) mkdir ("/var/log/apicollection/netbox/".$path."/", 755, true);
-                file_put_contents("/var/log/apicollection/netbox/$path/$date.log");
+                file_put_contents("/var/log/apicollection/netbox/$path/$date.log", "$url\r\n\r\n$Result");
                 return curl_exec($hCurl);
         }
 
@@ -66,6 +66,19 @@ class netbox
                 $Modules[] = array("path"=>"circuits/provider-networks", "Identifier"=>"id");
                 $Modules[] = array("path"=>"dcim/console-server-ports", "Identifier"=>"id");
                 $Modules[] = array("path"=>"dcim/devices", "Identifier"=>"id");
+                $Modules[] = array("path"=>"dcim/device-types", "Identifier"=>"id");
+                $Modules[] = array("path"=>"dcim/front-ports", "Identifier"=>"id");
+                $Modules[] = array("path"=>"dcim/interface-templates", "Identifier"=>"id");
+                $Modules[] = array("path"=>"dcim/interfaces", "Identifier"=>"id");
+                $Modules[] = array("path"=>"dcim/inventory-items", "Identifier"=>"id");
+                $Modules[] = array("path"=>"dcim/locations", "Identifier"=>"id");
+                $Modules[] = array("path"=>"dcim/manufacturers", "Identifier"=>"id");
+                $Modules[] = array("path"=>"dcim/platforms", "Identifier"=>"id");
+                $Modules[] = array("path"=>"dcim/power-feeds", "Identifier"=>"id");
+                $Modules[] = array("path"=>"dcim/power-outlet-templates", "Identifier"=>"id");
+                $Modules[] = array("path"=>"dcim/power-outlets", "Identifier"=>"id");
+                $Modules[] = array("path"=>"dcim/power-panels", "Identifier"=>"id");
+                $Modules[] = array("path"=>"dcim/rack-roles", "Identifier"=>"id");
                 $Modules[] = array("path"=>"dcim/regions", "Identifier"=>"id");
                 $Modules[] = array("path"=>"dcim/site-groups", "Identifier"=>"id");
                 $Modules[] = array("path"=>"dcim/sites", "Identifier"=>"id");
@@ -104,13 +117,14 @@ class netbox
                         $items_per_query = 100;
                         for($i = 0; $i < $count; $i += $items_per_query)
                         {
-                                $this->debug(5, "Fetch items $i up to ".($i + $items_per_query -1));
+                                $last_item = (($count - $i) > $items_per_query) ? $i+$items_per_query-1 : $count - $i;
+                                $this->debug(5, "Fetch items $i to $last_item", 3);
                                 $Item = $this->Request($Module['path'], "GET", array("offset"=>$i, "limit"=>$items_per_query));
                                 $arrItem = json_decode($Item);
-                                $Result = $arrItem->results[0];
-                                for ($n = 0; $n < $items_per_query; $n++)
+                                $Results = $arrItem->results;
+                                foreach($Results as $Result)
                                 {
-                                        file_put_contents($fullpath."/".$Result[$n]->id.".raw", print_r($Result[$n], true));
+                                        file_put_contents($fullpath."/".$Result->id.".raw", print_r($Result, true));
                                 }
                         }
  
