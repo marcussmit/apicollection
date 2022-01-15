@@ -104,6 +104,17 @@ class netbox
                 $Modules[] = array("path"=>"/ipam/vlan-groups", "Identifier"=>"id");
                 $Modules[] = array("path"=>"/ipam/vlans", "Identifier"=>"id");
                 $Modules[] = array("path"=>"/ipam/vrfs", "Identifier"=>"id");
+
+                $Modules[] = array("path"=>"/virtualization/cluster-groups", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/virtualization/cluster-types", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/virtualization/clusters", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/virtualization/interfaces", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/virtualization/virtual-machines", "Identifier"=>"id");
+
+                $Modules[] = array("path"=>"/wireless/wireless-lan-groups", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/wireless/wireless-lans", "Identifier"=>"id");
+                $Modules[] = array("path"=>"/wireless/wireless-links", "Identifier"=>"id");
+
                 return $Modules;
         }
 
