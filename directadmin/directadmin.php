@@ -2,18 +2,20 @@
 
 require_once("httpsocket.php");
 
-class directadmin_class
+namespace directadmin\directadmin;
+
+class directadmin
 {
 
-	var $url = "";
+	var $hostname = "";
 	var $port = 2222;
 	var $ssl = false;
 	var $username="";
 	var $password="";
 
-	public function __construct($url, $username, $password, $port = 2222, $ssl=true)
+	public function __construct($hostname, $username, $password, $port = 2222, $ssl=true)
 	{
-		$this->url = $url;
+		$this->hostname = $hostname;
 		$this->username = $username;
 		$this->password = $password;
 		$this->port = $port;
@@ -22,8 +24,10 @@ class directadmin_class
 
 	private function SendQuery($cmd, $Parameters = array(), $method = "POST")
 	{
+		$url = ($this->ssl) ? "ssl://".$this->url : $this->url;
+
 		$sock = new HTTPSocket;
-		$sock->connect($this->url, 2222);
+		$sock->connect($url, 2222);
 		$sock->set_login($this->username, $this->password);
 
 		$sock->set_method = $method;

@@ -2,7 +2,7 @@
 
 require_once("API.php");
 
-class OpenProvider
+class openprovider
 {
 
 	private $username = "";
@@ -10,10 +10,10 @@ class OpenProvider
 
 	private $API = null;
 
-	function __construct($username, $password)
+	function __construct($username, $passwordhash)
 	{
 		$this->username = $username;
-		$this->password = $password;
+		$this->password = $passwordhash;
 		$this->API = new OP_API ('https://api.openprovider.eu');
 
 	}
