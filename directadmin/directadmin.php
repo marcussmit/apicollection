@@ -1,8 +1,8 @@
 <?php
 
-require_once("httpsocket.php");
-
 namespace directadmin\directadmin;
+
+require_once("httpsocket.php");
 
 class directadmin
 {
