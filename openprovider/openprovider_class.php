@@ -72,23 +72,23 @@ class openprovider
 
 	}
 
-	public function TransferDomain($domain, $authCode)
+	public function TransferDomain($domain, $authCode, $dns, $handle)
 	{
 		// Split domain name and add as a parameter:
 		$temp = explode(".", $domain);
 		$Parameters['domain'] = array("name"=>$temp[0], "extension"=>$temp[1]);
 
 		// Set the required handles:
-		$Parameters['ownerHandle']   = "MS910901-NL";
-		$Parameters['billingHandle'] = "MS910901-NL";
-		$Parameters['adminHandle']   = "MS910901-NL";
-		$Parameters['techHandle']    = "MS910901-NL";
+		$Parameters['ownerHandle']     = "$handle";
+		$Parameters['billingHandle']   = "$handle";
+		$Parameters['adminHandle']     = "$handle";
+		$Parameters['techHandle']      = "$handle";
 
-		$Parameters['period'] = 1;
-		$Parameters['authCode']      = $authCode;
+		$Parameters['period']          = 1;
+		$Parameters['authCode']        = $authCode;
 
-		$Parameters['nsGroup'] = "dns-openprovider";
-		$Parameters['nsTemplateGroup'] = "directadmin vps01";
+		$Parameters['nsGroup']         = $dns['nsGroup'];
+		$Parameters['nsTemplateGroup'] = $dns['nsTemplateGroup'];
 
 		// Build the request:
 		$Request = new OP_Request();
@@ -128,7 +128,11 @@ class openprovider
 		return $this->API->process($Request);
 	}
 
-
+	public function ListDomains()
+	{
+		$Request = $this->BuildRequest("searchDomainRequest", true);
+		return $this->API->process($Request);
+	}
 }
 
 ?>

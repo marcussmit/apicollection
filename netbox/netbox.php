@@ -31,9 +31,12 @@ class netbox
                 if ($mode == "GET")
                 {
                         $parms = array();
-                        foreach($parameters as $parm=>$val)
+                        if (!is_null($parameters))
                         {
-                                $parms[] = $parm."=".urlencode($val);
+                                foreach($parameters as $parm=>$val)
+                                {
+                                        $parms[] = $parm."=".urlencode($val);
+                                }
                         }
                         $url .= "?".join("&", $parms);
                 }
@@ -185,9 +188,9 @@ class netbox
 
                 foreach($Filters as $Parm=>$val)
                 {
-                        if ()
+           //             if ()
                 }
-                $Result = $this->Result("/dcim/devices", )
+                //$Result = $this->Result("/dcim/devices", )
                 $Result = $Result->results;
 
                 switch($format)
