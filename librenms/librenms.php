@@ -22,11 +22,20 @@ class librenms
         // Destruct function
     }
 
-    private function Request($path = "", $method = "GET")
+    private function Request($path = "", $method = "GET", $Parameters = array())
     {
         // Build URL:
         $url = ($this->ssl == true) ? "https://" : "http://";
         $url .= $this->hostname."/api/v0".$path;
+
+        // Add parameters when requested:
+        $strParms = "";
+        foreach($Parameters as $parm=>$val)
+        {
+            $strParms .= ($strParms == "") ? "?" : "&";
+            $strParms .= "$parm=$val";
+        }
+        $url .= $strParms;
 
         // Build cURL and send query. Return the body:
         $hCurl = curl_init($url);
@@ -51,5 +60,9 @@ class librenms
         return $this->Request("/ports", "GET");
     }
 
+    public function GetSyslogs($hostname, $Parameters)
+    {
+        return $this->Request("/logs/syslog/$hostname", "GET", $Parameters);
+    }
 
 }
